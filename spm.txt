@@ -1,0 +1,49 @@
+spm_select('List',directory,'file_name');
+
+
+3.Setting up the origin:
+invert the co-ordinates of cross hair.
+
+4.Timing Correction:
+spm_slice_timing:-
+
+sliceOrder=[1:2:35  2:2:35]
+refSlice=1;
+TR=2;
+TA=TR-TR(TR/35);	//35 is number of slice;
+time1=TA/34;		//(number of slice-1)
+time2=TR-TA;
+timing(1)=time1;
+timing(2)=time2;
+spm_slice_timing(file,sliceOrder,refSlice,timing);
+
+
+
+5.SPM Estimate & Reslice:
+
+P=spm_select('ExitList',directory,'file_name',1:165);
+spm_realign(P);
+spm_reslice(P);		
+
+
+6.FMRI Coregistration :
+coregistation-> New "Coreg:Estimate &Relice" ->(Double click on Coreg options)->select Refrence Image(stationary image)->Source image(that is going to move along) -> other image(that is going to remain in alignment to the source image)
+click on Run.
+Anatomical Image-Right Images
+Mean EPI Image- Left images
+
+
+8.Normalization:
+Normalise->New "Normalise:Estimate & Write"->(Double click on Normalise)->New Subject->source Image->Images to write -> Estimate Options->Template Image->Run
+Anatomical Image-Right images
+Template Image-Left images
+
+9.Smoothing:
+smooth->Images to smooth->FWHM->(amount of smoothing)->Run
+smooth Image-TOP
+Smoothing increases signal to noise ratio at every box. And we can use closer correction.
+
+
+10.Loading .mat files:
+load('test.mat');
+jobs{1}.temporal{1}.st.scans{1}
